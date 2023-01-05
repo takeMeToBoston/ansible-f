@@ -1,0 +1,20 @@
+---
+- name: Test parametrs
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: create file1
+    copy:
+      dest: /home/secret/folder1/file1.txt    # create file1.txt
+      content: |                              # create content file1.txt
+        Text line1
+        Text line2
+        Text {{ mytext }}
+  - name: create file2
+    copy:
+      dest: /home/secret/folder2/file2.txt    # create file2.txt
+      content: |                              # create content file2.txt
+        Text line1
+        Text line2
+        Text {{ mytext }}

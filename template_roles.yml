@@ -1,0 +1,8 @@
+---
+- name: Install Apache  and Upload Web Page
+  hosts: k8s002, k8s003
+  become:  yes
+
+  roles:
+          - { role:  deploy_apache_web, when: ansible_system == 'Linux' }
+

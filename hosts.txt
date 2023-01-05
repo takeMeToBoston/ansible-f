@@ -1,0 +1,15 @@
+[STAGING_SERVERS]
+k8s002 ansible_host=192.168.40.129 owner=ROOT 
+
+[PROD_SERVERS]
+k8s003 ansible_host=192.168.40.130 owner=WORKER1
+k8s004 ansible_host=192.168.40.132 owner=WORKER2
+
+[ALL_SERVERS:children]
+STAGING_SERVERS
+PROD_SERVERS
+
+#[ALL_SERVERS:vars]
+#ansible_user=user
+#ansible_connection=ssh
+#ansible_sudo_pass='user'

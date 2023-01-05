@@ -1,0 +1,33 @@
+---
+- name: Send message to HOSTS
+  hosts: all
+  become: yes
+
+  vars:
+    message1: Hello                    # list of vars
+    message2: "Lionel Messi"           
+    secret:   "And the winner Is"
+
+  tasks:
+  - name: Print secret
+    debug:
+      var: message2                    # print var message2
+ 
+  - debug:
+      msg: "{{ secret }} {{message2}}"                                      # print vars mes1 + mes2
+  - debug:
+      msg: "Owner of this server is -->{{ owner }}<--"                      # print ansible var "owner"    
+
+  - set_fact: full_message="{{ message1 }} {{ message2 }} from {{ owner }}"     # made new var by set_fact -> full_message
+  
+  - debug:
+      var: full_message                # print full_message  
+  - debug:
+      var: ansible_distribution        # print ansible var ansible_distribution
+  - shell: uptime                      # do command 'uptime' and save it  
+    register: results                  # to var 'results'
+
+  - debug:
+      var: results                     # print var results
+  - debug:
+      var: results.start               # print part of var results -> results.start

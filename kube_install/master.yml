@@ -1,0 +1,32 @@
+---
+- hosts: STAGING_SERVERS
+  become: yes
+  tasks:
+    - name: Initialize the cluster                # инициализирует кластер посредством запуска kubeadm init
+      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+      args:
+        chdir: $HOME
+        creates: cluster_initialized.txt
+
+    - name: Create .kube directory                # создает каталог .kube по адресу /home/user
+      become: yes
+      become_user: user
+      file:
+        path: $HOME/.kube                         # каталоге будут храниться данные конфигурации
+        state: directory                          # в том числе файлы ключа администратора
+        mode: 0755                                # и адрес API кластера
+
+    - name: Copy admin.conf to user's kube config
+      copy:                                       # копирует файл /etc/kubernetes/admin.conf, 
+        src: /etc/kubernetes/admin.conf           # сгенерированный kubeadm init
+        dest: /home/user/.kube/config           # в домашнем каталоге пользователя без привилегий root
+        remote_src: yes
+        owner: user
+
+    - name: Install Pod network                   # запускает kubectl apply для установки Flannel
+      become: yes                                 # Файл kube-flannel.yml содержит описания объектов
+      become_user: user                           # требуемых для настроки Flannel в кластере
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k8s-manifests/kube-flannel-rbac.yml >> pod_network_setup.txt
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.txt

@@ -1,0 +1,30 @@
+---
+- name: Make some files and folders
+  hosts: k8s002, k8s003
+  become: yes
+
+  vars:
+    mytext: "Hello WORLD"
+
+  tasks:
+  - name: Ping hosts
+    ping:
+  
+  - name: Unregister Server from Load Balancer
+    shell: echo This server {{ inventory_hostname }} was deleted from Load Balacer, node name is {{ ansible_nodename}} >> /home/log.txt
+    delegate_to: 192.168.40.129
+
+  - name: create file1
+    copy:
+      dest: /home/file1.txt    # create file1.txt
+      content: |               # create content file1.txt
+        This is file1
+        Text {{ mytext }}
+    delegate_to: k8s003
+
+  - name: create file2
+    copy:
+      dest: /home/file2.txt    # create file2.txt
+      content: |               # create content file2.txt
+        This is file2
+        Text {{ mytext }} 

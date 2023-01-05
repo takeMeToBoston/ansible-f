@@ -1,0 +1,24 @@
+---
+- name: Loops playbook
+  hosts: k8s002
+  become: yes
+
+  tasks:
+  - name: Say to HI for ALL
+    debug: msg="HeLLo {{ item }}"
+    loop:
+      - "BAC9I"
+      - "IIem9I"
+      - "MAUIa"
+      - "OJI9I"
+
+  - name: Loop until example 
+    shell: echo -n Z >> myfile.txt && cat myfile.txt
+    register: output
+    delay: 2
+    retries: 10
+    until: output.stdout.find("ZZZZ") == false
+
+  - name: Print Final Output
+    debug:
+      var: output.stdout

@@ -1,0 +1,17 @@
+---
+- name: Make some files and folders
+  hosts: k8s002, k8s003
+  become: yes
+
+  vars:
+    mytext: "Hello WORLD"
+
+  tasks:
+  - name: 
+    ping:
+  
+  - name: create folders
+    include_tasks: create_folder.yml   # called playbook create_folder.yml
+
+  - name: create files
+    include_tasks: create_file.yml     # called playbook create_file.yml

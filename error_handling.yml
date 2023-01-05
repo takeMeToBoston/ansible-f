@@ -1,0 +1,24 @@
+---
+- name: Error control
+  hosts: k8s002, k8s003
+  any_errors_fatal: true
+  become: yes
+
+  tasks:
+  - name: Task number 1
+    apt: name=treee state=latest           # install treee 
+    ignore_errors: yes                     # if error - ingnore this erro
+
+  - name: Task number 2
+    shell: echo Privet vsem v chate !               # echo 
+    register: results                               # save to results
+  # failed_when: "'Privet' in results.stdout"       # check the results if it include 'Privet' => ERROR
+  # failed_when: results.rc == 0                    # check the results.rc (returned code) if it '0' => ERROR
+
+  - debug:
+      var: results.stdout
+
+  - name: Task number 3
+    shell: echo wabadabadu LOL !!!
+
+
